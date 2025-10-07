@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CHAVANS — Landing Prototype</title>
+<style>
+:root{
+  --fg:#111; --muted:#6f6f6f; --maxw:1200px; --accent:#000;
+  --panel-w:1100px; --gap:18px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Arial;color:var(--fg);background:#fff}
+header{position:sticky;top:0;background:#fff;border-bottom:1px solid #eee;z-index:110}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+.header-row{display:flex;align-items:center;justify-content:space-between;height:72px}
+.brand{font-weight:800;letter-spacing:1px}
+.nav{display:flex;gap:10px;align-items:center}
+.nav-btn{background:none;border:none;padding:10px 12px;font-size:15px;color:var(--muted);cursor:pointer;border-radius:6px; font-family: inherit; position:relative;}
+.nav-btn:hover{color:var(--fg);background:rgba(0,0,0,0.04)}
+
+/* Mega Panel */
+.mega-panel{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  top:100%;
+  margin-top:12px;
+  width:var(--panel-w);
+  max-width: calc(100vw - 40px);
+  background:#fff;
+  border-radius:10px;
+  box-shadow:0 16px 40px rgba(0,0,0,.12);
+  padding:20px;
+  display:none;
+  color:var(--muted);
+  text-align: left;
+}
+.mega-panel.visible{display:block}
+
+/* Layout */
+.mega-grid{display:flex;gap:var(--gap);align-items:flex-start;justify-content:flex-start}
+.mega-col{flex:1;min-width:240px;position:relative;padding:6px 8px}
+.mega-col h4{margin:0 0 12px;font-size:15px;color:var(--fg)}
+.mega-col + .mega-col{border-left:1px solid #f3f3f3;padding-left:18px}
+
+/* Section (clickable): title + caret + list */
+.section{margin-bottom:12px;border-radius:6px}
+.section-title{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:8px 10px;background:transparent;border-radius:6px;cursor:pointer;
+  color:var(--fg);font-weight:700;
+  border: none; font-family: inherit; font-size: 1rem; width: 100%;
+}
+.section-title:hover{background:rgba(0,0,0,.02)}
+.section-caret{font-size:12px;opacity:.6;transform:rotate(0deg);transition:transform .18s ease}
+
+/* collapsed by default; open when .active */
+.section-list{margin:6px 0 0 14px;padding:0;list-style:none;color:var(--muted);line-height:1.6;display:none}
+.section-list a { color: var(--muted); text-decoration: none; }
+.section-list a:hover { color: var(--fg); }
+.section.active > .section-list{display:block}
+.section.active .section-caret{transform:rotate(90deg)}
+.section-list li{margin:6px 0}
+
+/* footer */
+.mega-footer{margin-top:12px;border-top:1px solid #f3f3f3;padding-top:12px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px; flex-wrap: wrap; gap: 10px;}
+
+/* Resources Search */
+.resources-search {display:flex;gap:8px;align-items:center}
+.resources-search input{flex:1;padding:8px 10px;border:1px solid #e6e6e6;border-radius:8px;font-size:14px; font-family: inherit;}
+
+.btn{background:var(--accent);color:#fff;padding:8px 14px;border-radius:8px;font-weight:700;border:0;cursor:pointer; font-size: 14px;}
+.btn.outline{background:transparent;border:1px solid #ddd;color:var(--fg)}
+/* hero (minimal) */
+.hero{height:420px; display:flex; align-items:center; justify-content:center; text-align:center; background:
+  linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)),
+  url('https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1600&q=60') center/cover no-repeat; color:#fff}
+h1{font-size:40px;margin:0 0 10px;line-height:1.05}
+p.lead{margin:0 0 16px;color:rgba(255,255,255,.9)}
+.hero .cta{display:flex;gap:12px;justify-content:center;margin-top:14px}
+/* quick band */
+.feature-band{background:#fff;padding:18px 0;box-shadow:0 10px 30px rgba(10,10,10,.03)}
+.feature-row{display:flex;gap:12px;align-items:center;max-width:var(--maxw);margin:0 auto;padding:0 20px}
+.pill{flex:1;min-width:180px;background:#fafafa;border:1px solid #eee;padding:14px;border-radius:10px;display:flex;gap:12px;align-items:center;cursor:pointer; text-align: left;}
+.pill .title{font-weight:700}
+.pill .sub{font-size:13px;color:var(--muted);margin-top:6px}
+/* sections */
+section:not(.hero){max-width:var(--maxw); margin:36px auto; padding:40px 20px}
+h2 { font-size: 32px; font-weight: 700; margin-bottom: 1rem; }
+.cards{display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); margin-top: 1.5rem;}
+.card{background:#fff;border:1px solid #eee;border-radius:10px;padding:20px; text-align: left;}
+.card h3{margin:0 0 8px}
+.card p { margin: 0; }
+/* mobile nav */
+.mobile-nav-toggle { display: none; }
+.mobile-menu { display: none; }
+
+/* Generic menu items */
+.mega-col > a {display:block;padding:6px 0;color:var(--muted);font-size:14px; text-decoration: none;}
+.mega-col > a:hover {color:var(--fg)}
+
+/* responsive */
+@media (max-width:1100px){ .mega-panel{width:calc(100% - 40px)} .feature-row{overflow-x:auto} .pill{min-width:260px;flex:0 0 auto} .mega-grid{flex-wrap:wrap} }
+@media (max-width:768px){
+  .nav{display:none} .container .brand{padding-left:10px}
+  .mobile-nav-toggle { display: block; z-index: 99; }
+  .mobile-menu {
+    display: block;
+    position: fixed;
+    top: 72px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 72px);
+    background: #fff;
+    padding: 20px;
+    overflow-y: auto;
+    border-top: 1px solid #eee;
+    z-index: 98;
+  }
+  .mobile-menu .nav-btn { font-size: 1.2rem; width: 100%; text-align: left; padding: 15px 0; border-bottom: 1px solid #eee; }
+  
+  /* Mobile Accordion Styles */
+  .mobile-category-title {
+    background: none; border: none; font-size: 1.1rem; width: 100%; text-align: left; padding: 16px 0;
+    font-family: inherit; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid #eee; color: var(--fg);
+  }
+  .mobile-category-content { padding-left: 15px; border-left: 2px solid #f0f0f0; }
+  .mobile-category-item.open > .mobile-category-title { color: var(--accent); }
+  
+  .mobile-contact-btn-wrapper { padding-top: 20px; margin-top: 20px; border-top: 1px solid #eee; }
+  .mobile-contact-btn-wrapper .btn { width: 100%; text-align: center; padding: 14px; }
+}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
